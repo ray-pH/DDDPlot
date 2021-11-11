@@ -13,7 +13,7 @@ function replaceCoord(str){
 }
 
 function replaceInteger(str){
-    return (" "+str).replace(/([^.])(\d)([^.])/g, "$1$2.0$3").trimStart();
+    return (" "+str+" ").replace(/([^.\d])(\d+)([^.\d])/g, "$1$2.0$3").trim();
 }
 
 function parseSide(str){
