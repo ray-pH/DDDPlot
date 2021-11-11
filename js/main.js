@@ -161,8 +161,8 @@ let onee = true;
     const triTexture = createTriTexture(gl);
 
     const viewMatrix = Matrix4.inverse(Matrix4.lookAt(new Vector3(0.0, 0.0, 15.0), Vector3.zero, new Vector3(0.0, 1.0, 0.0)));
-    // const projectionMatrix = Matrix4.perspective(canvas.width / canvas.height, 60, 0.01, 100.0);
-    const projectionMatrix = Matrix4.orthographic(-5.0, 5.0, -5.0, 5.0, 0.1, 100.0);
+    const projectionMatrix = Matrix4.perspective(canvas.width / canvas.height, 60, 0.01, 100.0);
+    // const projectionMatrix = Matrix4.orthographic(-5.0, 5.0, -5.0, 5.0, 0.1, 100.0);
     const vpMatrix = Matrix4.mul(viewMatrix, projectionMatrix);
 
     const DEGREE_TO_RADIAN = Math.PI / 180.0;
