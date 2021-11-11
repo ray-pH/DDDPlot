@@ -377,6 +377,15 @@ class Matrix4 {
     ]);
   }
 
+  static orthographic(l,r,b,t,n,f) {
+    return new Matrix4([
+      2.0/(r-l), 0.0, 0.0, 0.0,
+      0.0, 2.0/(t-b), 0.0, 0.0,
+      0.0, 0.0, -2.0/(f-n), 0.0,
+      -(r+l)/(r-l), -(t+b)/(t-b), -(f+n)/(f-n), 1.0
+    ]);
+  }
+
   static lookAt(origin , target, up) {
     const front = Vector3.sub(target, origin).norm();
     const z = Vector3.mul(front, -1);
