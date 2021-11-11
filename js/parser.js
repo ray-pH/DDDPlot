@@ -1,16 +1,3 @@
-const nol = `
-float getDistance(vec3 p) {
-    // p.xy *= rotate(u_time * 0.65);
-    // p.xz *= rotate(u_time * 0.85);
-
-    float d0 = sdBox(p, vec3(2.0, 2.5, 3.0));
-    float d1 = sdSphere(p, 3.0);
-    float d2 = sdTorus(p, vec2(3.0, 1.0));
-    // return d2;
-    return (p.x*p.x + p.z*p.z - 1.0);
-}
-`;
-
 const funcHead = 
 `float getDistance(vec3 p){
 `;
@@ -25,8 +12,12 @@ function replaceCoord(str){
               .replace(/z/g,'p.z');
 }
 
+function replaceInteger(str){
+    return (" "+str).replace(/([^.])(\d)([^.])/g, "$1$2.0$3").trimStart();
+}
+
 function parseSide(str){
-    return replaceCoord(str);
+    return replaceCoord(replaceInteger(str));
 }
 
 function parseMathGLSL(mathStr){

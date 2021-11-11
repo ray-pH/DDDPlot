@@ -85,19 +85,21 @@ let onee = true;
     scaleFolder.add(parameters.scale, 'y', 0.01, 2.0).step(0.01);
     scaleFolder.add(parameters.scale, 'z', 0.01, 2.0).step(0.01);
 
-    // let functionsStr = {
-        // fun1: 'x*x + z*z = 1.0',
-    // };
     const functionGui = new dat.GUI();
     const funArr = [
-        'x*x + z*z = 1.0',
+        // 'x*x + z*z = 1.0',
+    ];
+    const funFolders = [
     ];
 
     let toPlot = false;
     let addF;
     function addFunction(){
-        funArr.push('');
-        functionGui.add(funArr, funArr.length-1);
+        let idStr = (funFolders.length).toString();
+        funArr.push('f'+idStr);
+        let newFolder = functionGui.addFolder('f' + idStr);
+        funFolders.push(newFolder);
+        newFolder.add(funArr, funArr.length-1);
     };
     const addFun = { 
         plot : function(){
@@ -112,7 +114,7 @@ let onee = true;
     };
     functionGui.domElement.id = 'funcGui';
     functionGui.add(addFun,'plot').name(' Plot ');
-    functionGui.add(funArr, 0);
+    // functionGui.add(funArr, 0);
     addF = functionGui.add(addFun,'add').name('+ Add Function');
 
     const canvas = document.getElementById('canvas');
@@ -122,6 +124,27 @@ let onee = true;
     };
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
+
+    let mouseDragged = false;
+    let mouseStartX;
+    let mouseStartY;
+    let startyRotation;
+    let rotationFactor = 0.5;
+    canvas.addEventListener('mousedown', function(event){
+        mouseStartX = event.pageX;
+        mouseStartY = event.pageY;
+        startyRotation = parameters.rotation.y;
+        mouseDragged = true;
+    });
+    canvas.addEventListener('mousemove', function(event){
+        if(mouseDragged){
+            let dX = event.pageX - mouseStartX;
+            parameters.rotation.y = startyRotation + rotationFactor*dX;
+        }
+    });
+    canvas.addEventListener('mouseup', function(event){
+        mouseDragged = false;
+    });
 
     const gl = canvas.getContext('webgl2');
     gl.clearColor(0.3, 0.3, 0.3, 1.0);
@@ -169,18 +192,10 @@ let onee = true;
                 uniforms = getUniformLocations(gl, program, 
                     ['u_triTexture', 'u_mvpMatrix', 'u_normalMatrix', 'u_cellNum', 'u_cellSize', 'u_time']);
             } catch(err){
-                console.log('unposible');
+                console.log(err);
             }
             toPlot = false;
         }
-        // if (frameNum > 100){
-        //     let vtx = onee ? VERTEX_SHADER_SOURCE : VERTEX_SHADER_SOURCE2;
-        //     program = createProgramFromSource(gl, vtx, FRAGMENT_SHADER_SOURCE);
-        //     uniforms = getUniformLocations(gl, program, ['u_triTexture', 'u_mvpMatrix', 'u_normalMatrix', 'u_cellNum', 'u_cellSize', 'u_time']);
-        //     frameNum = 0;
-        //     onee = !onee;
-        // }
-        // frameNum += 1;
         gl.useProgram(program);
         setUniformTexture(gl, 1, triTexture, uniforms['u_triTexture']);
         gl.uniformMatrix4fv(uniforms['u_mvpMatrix'], false, mvpMatrix.elements);
